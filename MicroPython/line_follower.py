@@ -11,12 +11,18 @@
 
 from pololu_3pi_2040_robot import robot
 from pololu_3pi_2040_robot.extras import editions
+from machine import Pin
 import time
 import _thread
 
+buzzer = robot.Buzzer()
 display = robot.Display()
 motors = robot.Motors()
 line_sensors = robot.LineSensors()
+led = Pin(25, Pin.OUT)
+
+intro = "t240 gedcg4 gedca4 afedggggagfdc4"
+# buzzer.play(intro)
 
 # Note: It's not safe to use Button B in a
 # multi-core program.
@@ -24,7 +30,7 @@ button_a = robot.ButtonA()
 
 edition = editions.select()
 if edition == "Standard":
-    max_speed = 6000
+    max_speed = 3000
     calibration_speed = 1000
     calibration_count = 100
 elif edition == "Turtle":
@@ -45,8 +51,8 @@ display.text("and press A to", 0, 30)
 display.text("calibrate.", 0, 40)
 display.show()
 
-while not button_a.check():
-    pass
+# while not button_a.check():
+    # pass
 
 display.fill(0)
 display.show()
@@ -77,17 +83,22 @@ t2 = time.ticks_us()
 p = 0
 line = []
 starting = False
+stop = False
 run_motors = False
 last_update_ms = 0
 
 def update_display():
     display.fill(0)
+    if stop:
+        display.text("Stop", 0, 0)
+        return
+
     display.text("Line Follower", 0, 0)
     if starting:
         display.text("Press A to stop", 0, 10)
     else:
         display.text("Press A to start", 0, 10)
-    
+
     ms = (t2 - t1)/1000
     display.text(f"Main loop: {ms:.1f}ms", 0, 20)
     display.text('p = '+str(p), 0, 30)
@@ -106,7 +117,7 @@ def update_display():
 
 def follow_line():
     last_p = 0
-    global p, ir, t1, t2, line, max_speed, run_motors
+    global p, ir, t1, t2, line, max_speed, run_motors, stop
     while True:
         # save a COPY of the line sensor data in a global variable
         # to allow the other thread to read it safely.
@@ -114,6 +125,16 @@ def follow_line():
         line_sensors.start_read()
         t1 = t2
         t2 = time.ticks_us()
+
+        threshold = 600
+
+        if line[0] > threshold and line[1] > threshold and line[3] > threshold and line[4] > threshold:
+            stop = True
+            motors.set_speeds(0, 0)
+            motors.off()
+            run_motors = False
+            # motors.off()
+            # break
 
         # postive p means robot is to left of line
         if line[1] < 700 and line[2] < 700 and line[3] < 700:
@@ -134,7 +155,7 @@ def follow_line():
         min_speed = 0
         left = max(min_speed, min(max_speed, max_speed + pid))
         right = max(min_speed, min(max_speed, max_speed - pid))
-        
+
         if run_motors:
             motors.set_speeds(left, right)
         else:
@@ -157,5 +178,5 @@ while True:
             starting = False
             run_motors = False
 
-    if starting and time.ticks_diff(t, start_ms) > 1000:
+    if not stop and starting and time.ticks_diff(t, start_ms) > 1000:
         run_motors = True
