@@ -39,15 +39,41 @@ display.fill(0)
 display.show()
 
 bump_sensors.calibrate()
-display.text("bump sensor calibrated")
+display.text("bump sensor calibrated",0,20)
 display.show()
 
 line_sensors.calibrate()
-display.text("line sensor calibrated")
+display.text("line sensor calibrated",0,20)
 display.show()
 
 time.sleep_ms(1000)
 
+#Calibration function
+def calibrate_line_sensor():
+    time.sleep_ms(500)
+
+    motors.set_speeds(calibration_speed, -calibration_speed)
+    for i in range(calibration_count/4):
+        line_sensors.calibrate()
+
+    motors.off()
+    time.sleep_ms(200)
+
+    motors.set_speeds(-calibration_speed, calibration_speed)
+    for i in range(calibration_count/2):
+        line_sensors.calibrate()
+
+    motors.off()
+    time.sleep_ms(200)
+
+    motors.set_speeds(calibration_speed, -calibration_speed)
+    for i in range(calibration_count/4):
+        line_sensors.calibrate()
+
+    motors.off()
+    time.sleep_ms(200)
+
+ 
 def check_end():
     #### check if black line is seen
 
@@ -63,7 +89,7 @@ def check_end():
         motors.off()
         return True
 
-display.text("start routine")
+display.text("start routine",0,20)
 display.show()
 
 
