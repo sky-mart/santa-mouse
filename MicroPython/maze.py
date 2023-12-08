@@ -40,7 +40,6 @@ display.text("max speed"+str(max_speed),0,20)
 display.text("",0,30)
 display.text("",0,40)
 display.show()
-max_speed=1000
 
 time.sleep_ms(500)
 
@@ -103,8 +102,13 @@ display.fill(0)
 display.text("start routine",0,20)
 display.show()
 
-
 while True:
+    display.fill(0)
+    display.text("max speed"+str(max_speed),0,20)
+    display.text("",0,30)
+    display.text("",0,40)
+    display.show()
+
     motors.set_speeds(max_speed, max_speed)
     bump_sensors.read()
     
