@@ -41,21 +41,15 @@ display.text("",0,30)
 display.text("",0,40)
 display.show()
 
-time.sleep_ms(500)
-
 bump_sensors.calibrate()
 display.fill(0)
 display.text("bump sensor calibrated",0,20)
 display.show()
 
-time.sleep_ms(500)
-
 line_sensors.calibrate()
 display.fill(0)
 display.text("line sensor calibrated",0,20)
 display.show()
-
-time.sleep_ms(500)
 
 #Calibration function
 def calibrate_line_sensor():
@@ -111,6 +105,8 @@ while True:
 
     motors.set_speeds(max_speed, max_speed)
     bump_sensors.read()
+    display.text("set speed",0,30)
+    display.show()
     
     # break when end is reached
     if check_end:
