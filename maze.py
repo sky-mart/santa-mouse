@@ -16,7 +16,7 @@ play_anthem.play()
 # multi-core program.
 button_a = robot.ButtonA()
 
-edition = editions.select()
+edition = editions.select(remember=True, ["speed1"])
 if edition == "Standard":
     max_speed = 3000
     calibration_speed = 1000
