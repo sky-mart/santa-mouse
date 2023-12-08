@@ -30,14 +30,17 @@ button_a = robot.ButtonA()
 
 edition = editions.select()
 if edition == "Standard":
+    min_speed = 0
     max_speed = 3000
     calibration_speed = 1000
     calibration_count = 100
 elif edition == "Turtle":
+    min_speed = 0
     max_speed = 2000
     calibration_speed = 1000
     calibration_count = 100
 elif edition == "Hyper":
+    min_speed = 0
     max_speed = 4000
     calibration_speed = 1000
     calibration_count = 100
@@ -81,27 +84,23 @@ motors.off()
 t1 = 0
 t2 = time.ticks_us()
 p = 0
+d = 0
 line = []
 starting = False
 stop = False
 run_motors = False
 last_update_ms = 0
 
+debugger_display_p = robot.Display()
+debugger_display_d = robot.Display()
+debugger_display_l1 = robot.Display()
+debugger_display_l2 = robot.Display()
+debugger_display_l3 = robot.Display()
+debugger_display_l4 = robot.Display()
+debugger_display_l5 = robot.Display()
+
 def update_display():
     display.fill(0)
-    if stop:
-        display.text("Stop", 0, 0)
-        return
-
-    display.text("Line Follower", 0, 0)
-    if starting:
-        display.text("Press A to stop", 0, 10)
-    else:
-        display.text("Press A to start", 0, 10)
-
-    ms = (t2 - t1)/1000
-    display.text(f"Main loop: {ms:.1f}ms", 0, 20)
-    display.text('p = '+str(p), 0, 30)
 
     # 64-40 = 24
     scale = 24/1000
@@ -114,10 +113,15 @@ def update_display():
     display.fill_rect(84, 64-int(line[4]*scale), 8, int(line[4]*scale), 1)
 
     display.show()
+    display.fill(0)
+    debugger_display_p.text("p = " + str(p), 0, 0)
+    debugger_display_p.show()
 
 def follow_line():
     last_p = 0
-    global p, ir, t1, t2, line, max_speed, run_motors, stop
+    global p, ir, t1, t2, line, max_speed, run_motors, stop, min_speed
+    left_turn = False
+    right_turn = False
     while True:
         # save a COPY of the line sensor data in a global variable
         # to allow the other thread to read it safely.
@@ -136,29 +140,60 @@ def follow_line():
             # motors.off()
             # break
 
-        # postive p means robot is to left of line
         if line[1] < threshold and line[2] < threshold and line[3] < threshold: #Center off the line
-            if p < 0:
-                l = 1000
-            else:
-                l = 3000 
+            if p < 0: # negative p means robot is to right of line
+                l = 1000 #previously 0
+            else: # postive p means robot is to left of line
+                l = 3000 #previously 4000
+        elif line[0] > threshold and line[1] > threshold and line[2] > threshold and line[3] > threshold: #left turn
+            left_turn = True
+        elif line[1] > threshold and line[2] > threshold and line[3] > threshold and line[4] > threshold: #right turn
+            right_turn = True
         else:
             # estimate line position
             l = (1000*line[1] + 2000*line[2] + 3000*line[3] + 4000*line[4]) // \
                 sum(line)
 
-        p = l - 2000
-        d = p - last_p
-        last_p = p
-        pid = p*90 + d*2000 #negative = left turn, positve = right turn
-        pid = pid * 0.01 #scale down pid
+        if left_turn:
+            motors.set_speeds(0, 0)
+            time.sleep_ms(200)
+            for i in range(calibration_count/6):
+                motors.set_speeds(-calibration_speed, calibration_speed)
+        elif right_turn:
+            motors.set_speeds(0, 0)
+            time.sleep_ms(200)
+            for i in range(calibration_count/6):
+                motors.set_speeds(calibration_speed, +calibration_speed)
+        else:
+            p = l - 2000
+            d = p - last_p
+            last_p = p
+            pid = p*90 + d*2000 #negative = left turn, positve = right turn
+            pid = pid * 0.01 #scale down pid
 
-        min_speed = 0
-        left = max(min_speed, min(max_speed, max_speed + (pid/2)))
-        right = max(min_speed, min(max_speed, max_speed - (pid/2)))
+            left = max(min_speed, min(max_speed, max_speed + (pid/2))) #Split pid per wheel for lesser effect
+            right = max(min_speed, min(max_speed, max_speed - (pid/2)))
+
+        debugger_display_d.text("d = " + str(d), 0, 20)
+        debugger_display_l1.text("line 1 = " + str(line[0]), 0, 30)
+        debugger_display_l2.text("line 2 = " + str(line[1]), 0, 40)
+        debugger_display_l2.text("line 3 = " + str(line[2]), 0, 50)
+        debugger_display_l3.text("line 4 = " + str(line[3]), 0, 60)
+        debugger_display_l4.text("line 5 = " + str(line[3]), 0, 70)
+
+        debugger_display_l1.show()
+        debugger_display_l2.show()
+        debugger_display_l3.show()
+        debugger_display_l4.show()
+        debugger_display_d.show()
 
         if run_motors:
-            motors.set_speeds(left, right)
+            if left_turn:
+                left_turn = False
+            elif right_turn:
+                right_turn = False
+            else:
+                motors.set_speeds(left, right)
         else:
             motors.off()
 

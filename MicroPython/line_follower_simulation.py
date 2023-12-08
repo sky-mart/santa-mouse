@@ -23,7 +23,7 @@ def follow_line():
     p = l - 2000
     d = p - last_p
     last_p = p
-    pid = p*90 + d*200 # negative = left turn, positve = right turn
+    pid = p*90 + d*2000 # negative = left turn, positve = right turn
 
     min_speed = 0
     left = max(min_speed, min(max_speed, max_speed + pid))
@@ -31,7 +31,7 @@ def follow_line():
 
     print(l)
     print(p)
-    print(pid*0.1)
+    print(pid*0.01)
     print(left, right)
 
 follow_line()
