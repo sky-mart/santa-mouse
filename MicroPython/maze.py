@@ -13,6 +13,86 @@ buzzer = robot.Buzzer()
 display = robot.Display()
 yellow_led = robot.YellowLED()
 
+crossroads_history = []
+moving_back = False
+
+def maze_algo_step():
+    global crossroads_history, moving_back
+
+    forward_move_available = False
+    left_turn_available = False;
+    right_turn_available = False
+    crossroads = False
+
+    if forward_move_available:
+        if left_turn_available or right_turn_available:
+            crossroads = True
+    else:
+        if left_turn_available and right_turn_available:
+            crossroads = True
+
+    if not crossroads:
+        if forward_move_available:
+            move_forward()
+        elif left_turn_available:
+            turn_left()
+            move_forward()
+        elif right_turn_available:
+            turn_right()
+            move_forward()
+        else:
+            # deadend
+            turn_back()
+            moving_back = True
+            move_forward()
+    elif not moving_back:
+        if forward_move_available:
+            crossroads_history.append(('F'))
+            move_forward()
+        elif left_turn_available:
+            crossroads_history.append(('L'))
+            turn_left()
+            move_forward()
+        elif right_turn_available:
+            crossroads_history.append(('R'))
+            turn_right()
+            move_forward()
+        else:
+            # deadend
+            turn_back()
+            moving_back = True
+            move_forward()
+    else:
+        if forward_move_available and 'F' not in crossroads_history[-1]:
+            crossroads_history[-1] += ('F')
+            moving_back = False
+            move_forward()
+        elif left_turn_available and 'R' not in crossroads_history[-1]:
+            crossroads_history[-1] += ('R')
+            moving_back = False
+            turn_left()
+            move_forward()
+        elif right_turn_available and 'L' not in crossroads_history[-1]:
+            crossroads_history[-1] += ('L')
+            moving_back = False
+            turn_right()
+            move_forward()
+        else:
+            # we've checked all variants for this crossroads
+            crossroads_history.pop_back()
+
+            last_direction = crossroads_history[-1][-1]
+            if last_direction == 'F':
+                move_forward()
+            elif last_direction == 'L':
+                turn_right()
+                move_forward()
+            elif last_direction == 'R':
+                turn_left()
+                move_forward()
+
+
+
 #Calibration function
 def calibrate_line_sensor():
     time.sleep_ms(500)
@@ -158,4 +238,4 @@ while True:
         yellow_led.off()
 
         display.fill(0)
-        display.show()    
+        display.show()
