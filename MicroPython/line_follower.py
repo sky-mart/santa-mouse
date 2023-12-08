@@ -145,12 +145,12 @@ def follow_line():
         else:
             # estimate line position
             l = (1000*line[1] + 2000*line[2] + 3000*line[3] + 4000*line[4]) // \
-                sum(line) #harsh
+                sum(line)
 
         p = l - 2000
         d = p - last_p
         last_p = p
-        pid = p*90 + d*2000 #harsh, negative = left turn, positve = right turn
+        pid = p*90 + d*2000 #negative = left turn, positve = right turn
         pid = pid * 0.01 #scale down pid
 
         min_speed = 0
