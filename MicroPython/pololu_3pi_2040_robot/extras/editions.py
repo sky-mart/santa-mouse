@@ -33,3 +33,26 @@ def select(*, remember=True):
             f.write(editions[index])
             f.write("\n")
     return editions[index]
+
+def select_new(selection):
+    remember=True
+    menu = Menu(selection)
+    menu.display = Display()
+    menu.buzzer = Buzzer()
+    menu.previous_button = ButtonA()
+    menu.select_button = ButtonB()
+    menu.next_button = ButtonC()
+    menu.top_message = "Choose edition:"
+    previous_choice = None
+    try:
+        with open('edition.conf') as f:
+            previous_choice = selection.index(f.read().strip())
+        menu.index = previous_choice
+    except (OSError, ValueError):
+        pass
+    index = menu.run()
+    if remember and index != previous_choice:
+        with open('edition.conf', 'w') as f:
+            f.write(selection[index])
+            f.write("\n")
+    return selection[index]

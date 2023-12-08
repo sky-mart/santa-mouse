@@ -172,6 +172,11 @@ class LineSensors(_IRSensors):
         # for testing
         return _state
 
+
+    def set_calibration(self,min_cal,max_cal):
+        self.cal_min = min_cal
+        self.cal_max = max_cal
+
     def reset_calibration(self):
         self.cal_min = array('H', [1025, 1025, 1025, 1025, 1025])
         self.cal_max = array('H', [0, 0, 0, 0, 0])
