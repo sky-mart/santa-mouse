@@ -88,9 +88,15 @@ def check_end():
     threshold = 600
 
     if line[0] > threshold and line[1] > threshold and line[3] > threshold and line[4] > threshold:
+        display.fill(0)
+        display.text("End reached"+str(max_speed),0,20)
+        display.text("",0,30)
+        display.text("",0,40)
+        display.show()
         motors.set_speeds(0, 0)
         motors.off()
         return True
+    return False
 
 display.fill(0)
 display.text("start routine",0,20)
@@ -105,11 +111,9 @@ while True:
 
     motors.set_speeds(max_speed, max_speed)
     bump_sensors.read()
-    display.text("set speed",0,30)
-    display.show()
-    
+
     # break when end is reached
-    if check_end:
+    if check_end():
         break
 
     if bump_sensors.left_is_pressed():
