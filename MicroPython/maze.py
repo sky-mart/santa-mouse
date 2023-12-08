@@ -2,6 +2,7 @@ from pololu_3pi_2040_robot import robot
 from pololu_3pi_2040_robot.extras import editions
 from machine import Pin
 import time
+from array import array
 import _thread
 import play_anthem
 
