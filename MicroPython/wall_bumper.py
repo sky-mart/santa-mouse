@@ -13,7 +13,7 @@ yellow_led = robot.YellowLED()
 
 edition = editions.select()
 if edition == "Standard":
-    max_speed = 1500
+    max_speed = 500
     turn_time = 250
 elif edition == "Turtle":
     max_speed = 3000
