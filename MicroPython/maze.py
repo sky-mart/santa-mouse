@@ -12,45 +12,6 @@ buzzer = robot.Buzzer()
 display = robot.Display()
 yellow_led = robot.YellowLED()
 
-#play_anthem.play()
-
-# Note: It's not safe to use Button B in a
-# multi-core program.
-button_a = robot.ButtonA()
-myselections= ["mode1", "mode2", "mode3"]
-edition = editions.select_new(myselections)
-if edition == "mode1":
-    max_speed = 1000
-    calibration_speed = 1000
-    calibration_count = 100
-    turn_time = 250
-elif edition == "mode2":
-    max_speed = 1500
-    calibration_speed = 1000
-    calibration_count = 100
-    turn_time = 250
-elif edition == "mode2":
-    max_speed = 2000
-    calibration_speed = 1000
-    calibration_count = 100
-    turn_time = 250
-
-display.fill(0)
-display.text("max speed"+str(max_speed),0,20)
-display.text("",0,30)
-display.text("",0,40)
-display.show()
-
-bump_sensors.calibrate()
-display.fill(0)
-display.text("bump sensor calibrated",0,20)
-display.show()
-
-line_sensors.calibrate()
-display.fill(0)
-display.text("line sensor calibrated",0,20)
-display.show()
-
 #Calibration function
 def calibrate_line_sensor():
     time.sleep_ms(500)
@@ -97,6 +58,47 @@ def check_end():
         motors.off()
         return True
     return False
+
+#play_anthem.play()
+
+# Note: It's not safe to use Button B in a
+# multi-core program.
+button_a = robot.ButtonA()
+myselections= ["mode1", "mode2", "mode3"]
+edition = editions.select_new(myselections)
+if edition == "mode1":
+    max_speed = 1000
+    calibration_speed = 1000
+    calibration_count = 100
+    turn_time = 250
+elif edition == "mode2":
+    max_speed = 1500
+    calibration_speed = 1000
+    calibration_count = 100
+    turn_time = 250
+elif edition == "mode2":
+    max_speed = 2000
+    calibration_speed = 1000
+    calibration_count = 100
+    turn_time = 250
+
+display.fill(0)
+display.text("max speed"+str(max_speed),0,20)
+display.text("",0,30)
+display.text("",0,40)
+display.show()
+
+bump_sensors.calibrate()
+display.fill(0)
+display.text("bump sensor calibrated",0,20)
+display.show()
+
+#line_sensors.calibrate()
+calibrate_line_sensor()
+display.fill(0)
+display.text("line sensor calibrated",0,20)
+display.show()
+
 
 display.fill(0)
 display.text("start routine",0,20)
