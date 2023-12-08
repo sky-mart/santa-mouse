@@ -6,13 +6,13 @@ from pololu_3pi_2040_robot.display import Display
 from pololu_3pi_2040_robot.buttons import ButtonA, ButtonB, ButtonC
 from pololu_3pi_2040_robot.buzzer import Buzzer
 
-originaleditions = [ "Standard", "Turtle", "Hyper" ]
+editions = [ "Standard", "Turtle", "Hyper" ]
 
 # This function always attempts to read the "edition.conf" file to determine
 # which choice to highlight by default.
 # If 'remember' is True (the default), it also stores the user's answer in
 # edition.conf.
-def select(*, remember=True, editions=originaleditions):
+def select(*, remember=True):
     menu = Menu(editions)
     menu.display = Display()
     menu.buzzer = Buzzer()
@@ -33,3 +33,26 @@ def select(*, remember=True, editions=originaleditions):
             f.write(editions[index])
             f.write("\n")
     return editions[index]
+
+def select_new(selection):
+    remember=True
+    menu = Menu(selection)
+    menu.display = Display()
+    menu.buzzer = Buzzer()
+    menu.previous_button = ButtonA()
+    menu.select_button = ButtonB()
+    menu.next_button = ButtonC()
+    menu.top_message = "Choose edition:"
+    previous_choice = None
+    try:
+        with open('edition.conf') as f:
+            previous_choice = selection.index(f.read().strip())
+        menu.index = previous_choice
+    except (OSError, ValueError):
+        pass
+    index = menu.run()
+    if remember and index != previous_choice:
+        with open('edition.conf', 'w') as f:
+            f.write(selection[index])
+            f.write("\n")
+    return selection[index]

@@ -10,13 +10,13 @@ display = robot.Display()
 motors = robot.Motors()
 line_sensors = robot.LineSensors()
 
-play_anthem.play()
+#play_anthem.play()
 
 # Note: It's not safe to use Button B in a
 # multi-core program.
 button_a = robot.ButtonA()
 myselections= ["speed1"]
-edition = editions.select(True, myselections)
+edition = editions.select_new(myselections)
 if edition == "Standard":
     max_speed = 3000
     calibration_speed = 1000
