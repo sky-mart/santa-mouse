@@ -12,18 +12,18 @@ def follow_line():
     # postive p means robot is to left of line
     if line[1] < threshold and line[2] < threshold and line[3] < threshold: #Center off the line
         if p < 0:
-            l = 0 #Harsh setting
+            l = 1000
         else:
-            l = 4000 #Harsh setting
+            l = 3000 
     else:
         # estimate line position
         l = (1000*line[1] + 2000*line[2] + 3000*line[3] + 4000*line[4]) // \
-            sum(line) #harsh
+            sum(line)
 
     p = l - 2000
     d = p - last_p
     last_p = p
-    pid = p*90 + d*200 #harsh, negative = left turn, positve = right turn
+    pid = p*90 + d*200 # negative = left turn, positve = right turn
 
     min_speed = 0
     left = max(min_speed, min(max_speed, max_speed + pid))
