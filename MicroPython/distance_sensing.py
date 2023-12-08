@@ -68,10 +68,13 @@ def main():
 
   i2c = I2C(id=0, scl=Pin(5), sda=Pin(4), freq=400_000)
 
-  da = DistanceArray(i2c, [shut_pin_left, shut_pin_mid, shut_pin_right])
+  dl = DistanceArray(i2c, 0x30, shut_pin_left)
+
+  # da = DistanceArray(i2c, [shut_pin_left, shut_pin_mid, shut_pin_right])
 
   while True:
-    display_measurements(da.left_distance(), da.mid_distance(), da.right_distance())
+    # display_measurements(da.left_distance(), da.mid_distance(), da.right_distance())
+    dbg(str(dl.get_distance())
 
 
 main()
