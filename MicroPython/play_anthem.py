@@ -4,5 +4,5 @@ buzzer = robot.Buzzer()
 display = robot.Display()
 
 def play():
-    intro = "t240 cccagf+lc8 cccagf+ld8 cccbag>c>c>c>c>d>cbf+ld8"
+    intro = "t160 l4 v10 msc8c8a8g8f8mlc msc8c8a8g8f8mld msc8c8b8+a8g8>c8>c8>c8>c8>d8>c8b8+g8mlf"
     buzzer.play(intro)
