@@ -5,7 +5,7 @@ display = robot.Display()
 
 #<,> etc.: before note -> octave
 #num: after note -> length
-#+,-: after note -> accidental
+#+,-: after note -> accidental (half tone shift)
 #ms: before notes -> staccato
 #ml: before notes -> remove staccato
 
