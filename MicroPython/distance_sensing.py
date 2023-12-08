@@ -19,9 +19,19 @@ def dbg(text):
   display.text(text, 0, 0)
   display.show()
 
+def display_measurements(left, mid, right):
+  display.fill(0)
+  display.text(str(left), 00, 0)
+  display.text(str(mid), 20, 0)
+  display.text(str(right), 40, 0)
+  display.show()
+
+
 class DistanceSensor:
-  def __init__(self, i2c):
-    self.tof = Sensor(i2c)
+  def __init__(self, i2c, new_i2c_addr, shutdown_pin):
+    shutdown_pin.high();
+    i2c.writeto_mem(0x29, 0x212, bytearray([new_i2c_addr]), addrsize=16)
+    self.tof = Sensor(i2c, address=new_i2c_addr)
 
   def get_distance(self):
     time.sleep(0.01)
@@ -32,8 +42,36 @@ class DistanceSensor:
     return (actual_value / FACTOR) + 1.5
 
 
-i2c = I2C(id=0, scl=Pin(5), sda=Pin(4), freq=400_000)
-ds = DistanceSensor(i2c)
+class DistanceArray:
+  def __init__(self, i2c, shut_pins):
+    for shut_pin in shut_pins:
+      shut_pin.low()
 
-while True:
-  dbg(str(ds.get_distance()))
+      self.left = DistanceSensor(i2c, 0x30, shut_pins[0])
+      self.mid = DistanceSensor(i2c, 0x31, shut_pins[1])
+      self.right = DistanceSensor(i2c, 0x32, shut_pins[2])
+
+  def left_distance(self):
+    return self.left.get_distance()
+
+  def mid_distance(self):
+    return self.mid.get_distance()
+
+  def right_distance(self):
+    return self.right.get_distance()
+
+
+def main():
+  shut_pin_left = Pin(24)
+  shut_pin_mid = Pin(7)
+  shut_pin_right = Pin(6)
+
+  i2c = I2C(id=0, scl=Pin(5), sda=Pin(4), freq=400_000)
+
+  da = DistanceArray(i2c, [shut_pin_left, shut_pin_mid, shut_pin_right])
+
+  while True:
+    display_measurements(da.left_distance(), da.mid_distance(), da.right_distance())
+
+
+main()
