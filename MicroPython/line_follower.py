@@ -120,6 +120,7 @@ def update_display():
 
 def follow_line():
     last_p = 0
+    i = 0
     global p, ir, t1, t2, line, max_speed, run_motors, stop, min_speed
     left_turn = False
     right_turn = False
@@ -167,13 +168,14 @@ def follow_line():
                 motors.set_speeds(calibration_speed, +calibration_speed)
         else:
             p = l - 2000
+            i += p
             d = p - last_p
             last_p = p
-            pid = p*90 + d*2000 #negative = left turn, positve = right turn
+            pid = p*90 + i*40 + d*2000 #negative = left turn, positve = right turn
             pid = pid * 0.01 #scale down pid
 
-            left = max(min_speed, min(max_speed, max_speed + (pid/2))) #Split pid per wheel for lesser effect
-            right = max(min_speed, min(max_speed, max_speed - (pid/2)))
+            left = max(min_speed, min(max_speed, max_speed + (pid))) #Split pid per wheel for lesser effect
+            right = max(min_speed, min(max_speed, max_speed - (pid)))
 
         if run_motors:
             if left_turn:
