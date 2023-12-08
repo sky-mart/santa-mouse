@@ -30,15 +30,15 @@ button_a = robot.ButtonA()
 
 edition = editions.select()
 if edition == "Standard":
-    max_speed = 4500
-    calibration_speed = 1000
-    calibration_count = 100
-elif edition == "Turtle":
     max_speed = 3000
     calibration_speed = 1000
     calibration_count = 100
+elif edition == "Turtle":
+    max_speed = 2000
+    calibration_speed = 1000
+    calibration_count = 100
 elif edition == "Hyper":
-    max_speed = 6000
+    max_speed = 4000
     calibration_speed = 1000
     calibration_count = 100
     #motors.flip_left(True)
