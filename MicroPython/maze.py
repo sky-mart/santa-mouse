@@ -36,17 +36,27 @@ elif edition == "mode2":
     turn_time = 250
 
 display.fill(0)
+display.text("max speed"+str(max_speed),0,20)
+display.text("",0,30)
+display.text("",0,40)
 display.show()
+max_speed=1000
+
+time.sleep_ms(500)
 
 bump_sensors.calibrate()
+display.fill(0)
 display.text("bump sensor calibrated",0,20)
 display.show()
 
+time.sleep_ms(500)
+
 line_sensors.calibrate()
+display.fill(0)
 display.text("line sensor calibrated",0,20)
 display.show()
 
-time.sleep_ms(1000)
+time.sleep_ms(500)
 
 #Calibration function
 def calibrate_line_sensor():
@@ -89,6 +99,7 @@ def check_end():
         motors.off()
         return True
 
+display.fill(0)
 display.text("start routine",0,20)
 display.show()
 
