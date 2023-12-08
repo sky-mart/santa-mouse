@@ -15,8 +15,8 @@ play_anthem.play()
 # Note: It's not safe to use Button B in a
 # multi-core program.
 button_a = robot.ButtonA()
-
-edition = editions.select(remember=True, ["speed1"])
+myselections= ["speed1"]
+edition = editions.select(True, myselections)
 if edition == "Standard":
     max_speed = 3000
     calibration_speed = 1000
