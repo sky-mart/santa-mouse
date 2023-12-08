@@ -84,23 +84,27 @@ motors.off()
 t1 = 0
 t2 = time.ticks_us()
 p = 0
-d = 0
 line = []
 starting = False
 stop = False
 run_motors = False
 last_update_ms = 0
 
-debugger_display_p = robot.Display()
-debugger_display_d = robot.Display()
-debugger_display_l1 = robot.Display()
-debugger_display_l2 = robot.Display()
-debugger_display_l3 = robot.Display()
-debugger_display_l4 = robot.Display()
-debugger_display_l5 = robot.Display()
-
 def update_display():
     display.fill(0)
+    if stop:
+        display.text("Stop", 0, 0)
+        return
+
+    display.text("Line Follower", 0, 0)
+    if starting:
+        display.text("Press A to stop", 0, 10)
+    else:
+        display.text("Press A to start", 0, 10)
+
+    ms = (t2 - t1)/1000
+    display.text(f"Main loop: {ms:.1f}ms", 0, 20)
+    display.text('p = '+str(p), 0, 30)
 
     # 64-40 = 24
     scale = 24/1000
@@ -113,9 +117,6 @@ def update_display():
     display.fill_rect(84, 64-int(line[4]*scale), 8, int(line[4]*scale), 1)
 
     display.show()
-    display.fill(0)
-    debugger_display_p.text("p = " + str(p), 0, 0)
-    debugger_display_p.show()
 
 def follow_line():
     last_p = 0
@@ -173,19 +174,6 @@ def follow_line():
 
             left = max(min_speed, min(max_speed, max_speed + (pid/2))) #Split pid per wheel for lesser effect
             right = max(min_speed, min(max_speed, max_speed - (pid/2)))
-
-        debugger_display_d.text("d = " + str(d), 0, 20)
-        debugger_display_l1.text("line 1 = " + str(line[0]), 0, 30)
-        debugger_display_l2.text("line 2 = " + str(line[1]), 0, 40)
-        debugger_display_l2.text("line 3 = " + str(line[2]), 0, 50)
-        debugger_display_l3.text("line 4 = " + str(line[3]), 0, 60)
-        debugger_display_l4.text("line 5 = " + str(line[3]), 0, 70)
-
-        debugger_display_l1.show()
-        debugger_display_l2.show()
-        debugger_display_l3.show()
-        debugger_display_l4.show()
-        debugger_display_d.show()
 
         if run_motors:
             if left_turn:
