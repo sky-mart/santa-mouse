@@ -39,7 +39,12 @@ display.fill(0)
 display.show()
 
 bump_sensors.calibrate()
+display.text("bump sensor calibrated")
+display.show()
+
 line_sensors.calibrate()
+display.text("line sensor calibrated")
+display.show()
 
 time.sleep_ms(1000)
 
@@ -57,6 +62,9 @@ def check_end():
         motors.set_speeds(0, 0)
         motors.off()
         return True
+
+display.text("start routine")
+display.show()
 
 
 while True:
