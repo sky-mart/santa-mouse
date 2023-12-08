@@ -37,7 +37,11 @@ def calibrate_line_sensor():
     motors.off()
     time.sleep_ms(200)
 
- 
+def set_calibration_line_sensor():
+    min_cal=array('H', [0,0,0,0])
+    max_cal=array('H', [1025, 1025, 1025, 1025, 1025])
+    line_sensors.set_calibration(min_cal,max_cal)
+
 def check_end():
     #### check if black line is seen
 
@@ -76,7 +80,7 @@ elif edition == "mode2":
     calibration_speed = 1000
     calibration_count = 100
     turn_time = 250
-elif edition == "mode2":
+elif edition == "mode3":
     max_speed = 2000
     calibration_speed = 1000
     calibration_count = 100
@@ -94,7 +98,8 @@ display.text("bump sensor calibrated",0,20)
 display.show()
 
 #line_sensors.calibrate()
-calibrate_line_sensor()
+#calibrate_line_sensor()
+set_calibration_line_sensor()
 display.fill(0)
 display.text("line sensor calibrated",0,20)
 display.show()
