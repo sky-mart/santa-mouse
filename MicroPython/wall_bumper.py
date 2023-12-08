@@ -12,13 +12,13 @@ display = robot.Display()
 yellow_led = robot.YellowLED()
 
 edition = editions.select()
-if edition == "Speed 1":
+if edition == "Standard":
     max_speed = 750
     turn_time = 250
-elif edition == "Speed 2":
+elif edition == "Turtle":
     max_speed = 1000
     turn_time = 250
-elif edition == "Speed 3":
+elif edition == "Hyper":
     max_speed = 1500
     turn_time = 250
     #motors.flip_left(True)
