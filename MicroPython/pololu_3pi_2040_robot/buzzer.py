@@ -134,15 +134,12 @@ class Buzzer:
                 x += 1
                 continue
             elif "!" == c:
-                #octave = 4
-                #volume = 15
-                staccato = True
-                #tempo = 120
-                #default_duration = 4
-                #octave_boost = 0
-                continue
-            elif "?" == c:
+                octave = 4
+                volume = 15
                 staccato = False
+                tempo = 120
+                default_duration = 4
+                octave_boost = 0
                 continue
             else:
                 continue
