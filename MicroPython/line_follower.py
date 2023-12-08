@@ -174,8 +174,8 @@ def follow_line():
             pid = p*90 + i*40 + d*2000 #negative = left turn, positve = right turn
             pid = pid * 0.01 #scale down pid
 
-            left = max(min_speed, min(max_speed, max_speed + (pid))) #Split pid per wheel for lesser effect
-            right = max(min_speed, min(max_speed, max_speed - (pid)))
+            left = max(min_speed, min(max_speed, max_speed + (pid/1.5))) #Split pid per wheel for lesser effect
+            right = max(min_speed, min(max_speed, max_speed - (pid/1.5)))
 
         if run_motors:
             if left_turn:
