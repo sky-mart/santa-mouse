@@ -150,12 +150,12 @@ def follow_line():
         p = l - 2000
         d = p - last_p
         last_p = p
-        pid = p*90 + d*200 #negative = left turn, positve = right turn
-        pid = pid * 0.1 #scale down pid
+        pid = p*90 + d*2000 #negative = left turn, positve = right turn
+        pid = pid * 0.01 #scale down pid
 
         min_speed = 0
-        left = max(min_speed, min(max_speed, max_speed + pid))
-        right = max(min_speed, min(max_speed, max_speed - pid))
+        left = max(min_speed, min(max_speed, max_speed + (pid/2)))
+        right = max(min_speed, min(max_speed, max_speed - (pid/2)))
 
         if run_motors:
             motors.set_speeds(left, right)
