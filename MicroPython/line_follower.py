@@ -14,6 +14,7 @@ from pololu_3pi_2040_robot.extras import editions
 from machine import Pin
 import time
 import _thread
+import play_anthem
 
 buzzer = robot.Buzzer()
 display = robot.Display()
@@ -21,8 +22,7 @@ motors = robot.Motors()
 line_sensors = robot.LineSensors()
 led = Pin(25, Pin.OUT)
 
-intro = "t240 gedcg4 gedca4 afedggggagfdc4"
-# buzzer.play(intro)
+play_anthem.play()
 
 # Note: It's not safe to use Button B in a
 # multi-core program.
