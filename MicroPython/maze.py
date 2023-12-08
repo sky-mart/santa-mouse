@@ -15,19 +15,13 @@ line_sensors = robot.LineSensors()
 # Note: It's not safe to use Button B in a
 # multi-core program.
 button_a = robot.ButtonA()
-myselections= ["speed1"]
+myselections= ["mode1"]
 edition = editions.select_new(myselections)
-if edition == "Standard":
-    max_speed = 3000
+if edition == "mode1":
+    max_speed = 1000
     calibration_speed = 1000
     calibration_count = 100
-elif edition == "Turtle":
-    max_speed = 6000
-    calibration_speed = 3000
-    calibration_count = 100
-elif edition == "Hyper":
-    max_speed = 2000
+elif edition == "mode2":
+    max_speed = 1000
     calibration_speed = 1000
     calibration_count = 100
-    motors.flip_left(True)
-    motors.flip_right(True)
